@@ -10,8 +10,7 @@ class LunchController
 {           
     // return array of json recipe data
     private function readRecipeData() {
-        $data = file_get_contents('../src/app/Recipe/data.json');           
-        // $data = file_get_contents('recipe.json');
+        $data = file_get_contents(__DIR__ . '/../../../src/app/Recipe/data.json');        
         $arr_data = json_decode($data);
 
         return $arr_data;                
@@ -19,8 +18,7 @@ class LunchController
 
     // return array of json ingredient data
     private function readIngredientsData() {
-        $data = file_get_contents('../src/app/Ingredient/data.json');        
-        // $data = file_get_contents('ingredient.json');
+        $data = file_get_contents(__DIR__ . '/../../../src/app/Ingredient/data.json');        
         $arr_data = json_decode($data);
 
         return $arr_data;                
@@ -65,6 +63,7 @@ class LunchController
         $result = array();
         foreach($data->recipes as $item) {        
             foreach($item->ingredients as $ingredient) {
+                // found ingredient in recipe
                 if ($ingredient == $ing) {
                     $result[] = $item->title;
                 }
@@ -79,6 +78,7 @@ class LunchController
       */
 
     // #2, return recipe before ingredient use by date passed
+    // use $data parameter (not current data by system) because dates in json sample data has been passed
     public function getRecipeBeforeIngredientUseByDate($date) {
         $data = $this->readRecipeData();
         
@@ -87,11 +87,13 @@ class LunchController
             $include = true;
             foreach($item->ingredients as $ingredient) {                
                 $use_by_date = $this->getIngredientsDate($ingredient, 'use-by');
+                // use by date has been passed particular date 
                 if ($date >= $use_by_date) {
                     $include = false;                    
                 }
             }
 
+            // pool the recipe
             if ($include) {
                 $result[] =  $item->title;
             }            
@@ -105,6 +107,7 @@ class LunchController
       */
       
     // #3, return recipe before ingredient use by date passed, including ingredient that passed its best before date
+    // use $data parameter (not current data by system) because dates in json sample data has been passed
     public function getRecipeAfterIngredientBestBeforeInUseByDate($date) {
         $data = $this->readRecipeData();
         
@@ -116,16 +119,19 @@ class LunchController
             foreach($item->ingredients as $ingredient) {                
                 $best_before_date = $this->getIngredientsDate($ingredient);
                 $use_by_date = $this->getIngredientsDate($ingredient, 'use-by');
+                // use by date has been passed particular date 
                 if ($date >= $use_by_date) {
                     $include = false;                    
                 }
                 else {
+                    // check if use by date still not passed but best before date has been passed
                     if ($date >= $best_before_date) {
                         $after_best_before = true;                    
                     }
                 }
             }
 
+            // pool the recipe
             if ($include) {
                 if ($after_best_before) {
                     $temp[] =  $item->title;

@@ -15,7 +15,10 @@ After clone or download this repository, do this steps
    example: /recipe/use-by/after-best/2019-01-01
 
 # Unit Test 
-  (Included but not created yet)
+  Using PHPUnit. Test items are in the tests/Controller/PostController.php
+  It will test 4 end points above.
+  To execute the test, use "php bin/phpunit tests/Controller" command
+
 
 # PHP Technical Task
 Suggested recipes for lunch API
