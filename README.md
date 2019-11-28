@@ -1,5 +1,5 @@
 # Installation
-After clone or download this repository, do this steps
+After download this repository from master, i did this steps
 1. composer install
 2. composer require annotations
 3. composer require --dev symfony/phpunit-bridge
